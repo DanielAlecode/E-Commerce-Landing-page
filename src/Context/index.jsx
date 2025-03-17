@@ -27,7 +27,8 @@ const ShoppingCartProvider = ({ children }) => {
             value={{
                 counter, setCount, openProductDetail, closeProductDetail,
                 isProductDetailOpen, productToShow, setProductToShow, cartProducts, setCartProducts,
-                isCheckOutSideMenuOpen, setCheckOutSideMenu, openCheckOutSideMenu, closeCheckOutSideMenu
+                isCheckOutSideMenuOpen, setCheckOutSideMenu, openCheckOutSideMenu, closeCheckOutSideMenu, 
+                setOrder, order
             }}
         >
             {children}

@@ -1,6 +1,10 @@
 import { XMarkIcon } from "@heroicons/react/16/solid";
 
 const OrderCard = ({ id, title, imageUrl, price, handleDelete }) => {
+    let renderXMarkIcon;
+    if(handleDelete){
+        renderXMarkIcon =  <XMarkIcon className="h-5 w-5 text-gray-600 hover:text-red-500" />
+    }
     return (
         <div className="flex justify-between items-center px-4 py-2 bg-white shadow-sm rounded-lg">
             {/* Contenido de la orden */}
@@ -18,7 +22,7 @@ const OrderCard = ({ id, title, imageUrl, price, handleDelete }) => {
 
             {/* Botón de eliminar */}
             <button className="p-1 rounded-full hover:bg-gray-200 transition duration-200" onClick={() => handleDelete(id)}>
-                <XMarkIcon className="h-5 w-5 text-gray-600 hover:text-red-500" />
+                {renderXMarkIcon}
             </button>
         </div>
     );
