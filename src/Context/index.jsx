@@ -1,42 +1,84 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 
 const ShoppingCartContext = createContext();
 
 const ShoppingCartProvider = ({ children }) => {
-    //Cart items counter 
-    const [counter, setCount] = useState(0);
-    const [cartProducts, setCartProducts] = useState([]);
-    //My order 
-    const [ order, setOrder ] = useState([]);
-    //Product Details 
-    const [isProductDetailOpen, setProductDetailOpen] = useState(false);
-    const openProductDetail = () => setProductDetailOpen(true);
-    const closeProductDetail = () => setProductDetailOpen(false);
-    const [productToShow, setProductToShow] = useState({
-        title: "",
-        price: "",
-        description: "",
-        images: [],
-    });
-    //Check out side menu items
-    const [isCheckOutSideMenuOpen, setCheckOutSideMenu] = useState(false);
-    const openCheckOutSideMenu = () => setCheckOutSideMenu(true);
-    const closeCheckOutSideMenu = () => setCheckOutSideMenu(false);
-    return (
-        <ShoppingCartContext.Provider
-            value={{
-                counter, setCount, openProductDetail, closeProductDetail,
-                isProductDetailOpen, productToShow, setProductToShow, cartProducts, setCartProducts,
-                isCheckOutSideMenuOpen, setCheckOutSideMenu, openCheckOutSideMenu, closeCheckOutSideMenu, 
-                setOrder, order
-            }}
-        >
-            {children}
-        </ShoppingCartContext.Provider>
-    )
-}
+  // Estado de productos
+  const [items, setItems] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]);
+  const [searchByTitle, setSearchByTitle] = useState("");
 
-export {
-    ShoppingCartContext,
-    ShoppingCartProvider
-}
+  // Estado de carrito
+  const [cartProducts, setCartProducts] = useState([]);
+  const [counter, setCount] = useState(0);
+  const [order, setOrder] = useState([]);
+
+  // Estado de detalles de producto
+  const [isProductDetailOpen, setProductDetailOpen] = useState(false);
+  const [productToShow, setProductToShow] = useState(null);
+
+  // Estado del checkout side menu
+  const [isCheckOutSideMenuOpen, setCheckOutSideMenuOpen] = useState(false);
+
+  // Fetch de productos
+  useEffect(() => {
+    fetch('https://api.escuelajs.co/api/v1/products')
+      .then(res => res.json())
+      .then(data => setItems(data));
+  }, []);
+
+  // Filtrado de productos
+  useEffect(() => {
+    if (searchByTitle) {
+      const filtered = items.filter(item =>
+        item.title.toLowerCase().includes(searchByTitle.toLowerCase())
+      );
+      setFilteredItems(filtered);
+    } else {
+      setFilteredItems(items);
+    }
+  }, [items, searchByTitle]);
+
+  // Funciones utilitarias
+  const openProductDetail = () => setProductDetailOpen(true);
+  const closeProductDetail = () => setProductDetailOpen(false);
+
+  const openCheckOutSideMenu = () => setCheckOutSideMenuOpen(true);
+  const closeCheckOutSideMenu = () => setCheckOutSideMenuOpen(false);
+
+  return (
+    <ShoppingCartContext.Provider
+      value={{
+        // Productos
+        items,
+        filteredItems,
+        searchByTitle,
+        setSearchByTitle,
+
+        // Carrito
+        cartProducts,
+        setCartProducts,
+        counter,
+        setCount,
+        order,
+        setOrder,
+
+        // Detalles del producto
+        isProductDetailOpen,
+        openProductDetail,
+        closeProductDetail,
+        productToShow,
+        setProductToShow,
+
+        // Side menu
+        isCheckOutSideMenuOpen,
+        openCheckOutSideMenu,
+        closeCheckOutSideMenu,
+      }}
+    >
+      {children}
+    </ShoppingCartContext.Provider>
+  );
+};
+
+export { ShoppingCartContext, ShoppingCartProvider };
