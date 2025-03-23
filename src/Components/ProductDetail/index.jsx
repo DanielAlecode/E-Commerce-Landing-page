@@ -5,6 +5,8 @@ import { ShoppingCartContext } from "../../Context";
 const ProductDetail = () => {
   const context = useContext(ShoppingCartContext);
 
+  
+
   return (
     <aside
       className={`${context.isProductDetailOpen ? "translate-x-0" : "translate-x-full"
